@@ -1,4 +1,6 @@
-pub fn test() {
+pub mod endpoints;
+
+pub fn execute() {
     println!("Hello, world!");
 }
 
