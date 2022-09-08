@@ -1,4 +1,5 @@
 pub mod endpoints;
+pub mod http;
 
 pub fn execute() {
     println!("Hello, world!");
