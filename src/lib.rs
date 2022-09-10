@@ -1,5 +1,6 @@
 pub mod endpoints;
 pub mod http;
+pub mod models;
 
 pub fn execute() {
     println!("Hello, world!");
