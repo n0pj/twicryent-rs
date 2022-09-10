@@ -1,6 +1,8 @@
-pub mod endpoints;
+pub mod api;
 pub mod http;
 pub mod models;
+
+pub use models::*;
 
 pub fn execute() {
     println!("Hello, world!");

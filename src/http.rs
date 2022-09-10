@@ -1,5 +1,4 @@
-use crate::{endpoints, models::Twitter};
-use percent_encoding::percent_decode;
+use crate::models::Twitter;
 use reqwest::{
     header::{HeaderMap, HeaderValue},
     Client,

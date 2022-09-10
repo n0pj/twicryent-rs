@@ -1,7 +1,4 @@
-use crate::{
-    endpoints,
-    http::{self, ApiVersion, Method},
-};
+use crate::http::Method;
 use chrono::Utc;
 use hmacsha1::hmac_sha1;
 use percent_encoding::{utf8_percent_encode, AsciiSet};
@@ -9,7 +6,8 @@ use reqwest::{
     header::{HeaderMap, HeaderValue},
     Client,
 };
-use std::{collections::HashMap, env, hash::Hash};
+use serde::de::DeserializeOwned;
+use std::collections::HashMap;
 
 const FRAGMENT: &AsciiSet = &percent_encoding::NON_ALPHANUMERIC
     .remove(b'*')
@@ -42,99 +40,98 @@ impl Twitter {
         }
     }
 
-    fn split_query(query: &str) -> HashMap<String, String> {
-        let mut param = HashMap::new();
+    // fn split_query(query: &str) -> HashMap<String, String> {
+    //     let mut param = HashMap::new();
 
-        for q in query.split('&') {
-            let (k, v) = q.split_once('=').unwrap();
-            let _ = param.insert(k.into(), v.into());
-        }
+    //     for q in query.split('&') {
+    //         let (k, v) = q.split_once('=').unwrap();
+    //         let _ = param.insert(k.into(), v.into());
+    //     }
 
-        param
-    }
+    //     param
+    // }
 
-    // deprecated
-    async fn get_request_token(self) -> Self {
-        let endpoint = "https://api.twitter.com/oauth/request_token";
-        // let endpoint = format!("{}?oauth_callback=local", endpoint);
+    // async fn get_request_token(self) -> Self {
+    //     let endpoint = "https://api.twitter.com/oauth/request_token";
+    //     // let endpoint = format!("{}?oauth_callback=local", endpoint);
 
-        let mut params = HashMap::new();
+    //     let mut params = HashMap::new();
 
-        params.insert("oauth_callback", "oob");
+    //     params.insert("oauth_callback", "oob");
 
-        let res = http::request_text(&endpoint, params, ApiVersion::V1, Method::Post).await;
+    //     let res = http::request_text(&endpoint, params, ApiVersion::V1, Method::Post).await;
 
-        println!("res: {:?}", res);
+    //     println!("res: {:?}", res);
 
-        let queries = Twitter::split_query(&res.unwrap());
+    //     let queries = Twitter::split_query(&res.unwrap());
 
-        Self {
-            consumer_api_key: self.consumer_api_key,
-            consumer_api_key_secret: self.consumer_api_key_secret,
-            access_token: queries.get("oauth_token").unwrap().to_string(),
-            access_token_secret: queries.get("oauth_token_secret").unwrap().to_string(),
-        }
-    }
+    //     Self {
+    //         consumer_api_key: self.consumer_api_key,
+    //         consumer_api_key_secret: self.consumer_api_key_secret,
+    //         access_token: queries.get("oauth_token").unwrap().to_string(),
+    //         access_token_secret: queries.get("oauth_token_secret").unwrap().to_string(),
+    //     }
+    // }
 
-    // deprecated
-    async fn get_authenticate_url(self) -> Result<Self, Box<dyn std::error::Error>> {
-        let endpoint = "https://api.twitter.com/oauth/authenticate";
-        let endpoint = format!(
-            "{}?oauth_token={}&oauth_token_secret={}",
-            endpoint, self.access_token, self.access_token_secret
-        );
+    // // deprecated
+    // async fn get_authenticate_url(self) -> Result<Self, Box<dyn std::error::Error>> {
+    //     let endpoint = "https://api.twitter.com/oauth/authenticate";
+    //     let endpoint = format!(
+    //         "{}?oauth_token={}&oauth_token_secret={}",
+    //         endpoint, self.access_token, self.access_token_secret
+    //     );
 
-        println!("url: {}", endpoint);
+    //     println!("url: {}", endpoint);
 
-        Ok(self)
-    }
+    //     Ok(self)
+    // }
 
-    // deprecated
-    async fn get_access_token(self, input: String) -> Result<Self, Box<dyn std::error::Error>> {
-        let endpoint = "https://api.twitter.com/oauth/access_token";
-        let mut headers = HeaderMap::new();
-        let mut params = HashMap::new();
-        let endpoint = format!(
-            "{}?oauth_verifier={}&oauth_token={}&oauth_consumer_key={}",
-            endpoint, input, self.access_token, self.consumer_api_key
-        );
+    // // deprecated
+    // async fn get_access_token(self, input: String) -> Result<Self, Box<dyn std::error::Error>> {
+    //     let endpoint = "https://api.twitter.com/oauth/access_token";
+    //     let mut headers = HeaderMap::new();
+    //     let params = HashMap::new();
+    //     let endpoint = format!(
+    //         "{}?oauth_verifier={}&oauth_token={}&oauth_consumer_key={}",
+    //         endpoint, input, self.access_token, self.consumer_api_key
+    //     );
 
-        println!("url: {}", endpoint);
+    //     println!("url: {}", endpoint);
 
-        let oauth_header = self.create_oauth_header(&Method::Get, &endpoint, &params);
+    //     let oauth_header = self.create_oauth_header(&Method::Get, &endpoint, &params);
 
-        headers.insert(
-            "Authorization",
-            oauth_header.parse::<HeaderValue>().unwrap(),
-        );
+    //     headers.insert(
+    //         "Authorization",
+    //         oauth_header.parse::<HeaderValue>().unwrap(),
+    //     );
 
-        headers.insert(
-            "Content-Type",
-            "application/json".parse::<HeaderValue>().unwrap(),
-        );
+    //     headers.insert(
+    //         "Content-Type",
+    //         "application/json".parse::<HeaderValue>().unwrap(),
+    //     );
 
-        let client = Client::new();
-        let res;
+    //     let client = Client::new();
+    //     let res;
 
-        res = client
-            .post(format!("{}", endpoint))
-            .headers(headers)
-            .send()
-            .await?
-            .text()
-            .await?;
+    //     res = client
+    //         .post(format!("{}", endpoint))
+    //         .headers(headers)
+    //         .send()
+    //         .await?
+    //         .text()
+    //         .await?;
 
-        println!("get_access_token_res: {}", res);
+    //     println!("get_access_token_res: {}", res);
 
-        let queries = Twitter::split_query(&res);
+    //     let queries = Twitter::split_query(&res);
 
-        Ok(Self {
-            consumer_api_key: self.consumer_api_key,
-            consumer_api_key_secret: self.consumer_api_key_secret,
-            access_token: queries.get("oauth_token").unwrap().to_string(),
-            access_token_secret: queries.get("oauth_token_secret").unwrap().to_string(),
-        })
-    }
+    //     Ok(Self {
+    //         consumer_api_key: self.consumer_api_key,
+    //         consumer_api_key_secret: self.consumer_api_key_secret,
+    //         access_token: queries.get("oauth_token").unwrap().to_string(),
+    //         access_token_secret: queries.get("oauth_token_secret").unwrap().to_string(),
+    //     })
+    // }
 
     // deprecated
     pub fn get_authorize_url(&self) -> String {
@@ -143,7 +140,7 @@ impl Twitter {
         format!("{}?oauth_token={}", endpoint, self.access_token)
     }
 
-    pub async fn get(
+    pub async fn get_text(
         &self,
         endpoint: &str,
         params: HashMap<&str, &str>,
@@ -169,6 +166,37 @@ impl Twitter {
             .send()
             .await?
             .text()
+            .await?;
+
+        Ok(res)
+    }
+
+    pub async fn get<T: DeserializeOwned>(
+        &self,
+        endpoint: &str,
+        params: HashMap<&str, &str>,
+    ) -> Result<T, Box<dyn std::error::Error>> {
+        let mut headers = HeaderMap::new();
+        let client = Client::new();
+        let oauth_header = self.create_oauth_header(&Method::Get, &endpoint, &params);
+        let endpoint = format!("{}?{}", endpoint, self.create_query(&params));
+
+        headers.insert(
+            "Authorization",
+            oauth_header.parse::<HeaderValue>().unwrap(),
+        );
+
+        headers.insert(
+            "Content-Type",
+            "application/json".parse::<HeaderValue>().unwrap(),
+        );
+
+        let res = client
+            .get(format!("{}", endpoint))
+            .headers(headers)
+            .send()
+            .await?
+            .json::<T>()
             .await?;
 
         Ok(res)
