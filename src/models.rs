@@ -9,6 +9,9 @@ use reqwest::{
 use serde::de::DeserializeOwned;
 use std::collections::HashMap;
 
+// ReExport
+pub use crate::api::*;
+
 const FRAGMENT: &AsciiSet = &percent_encoding::NON_ALPHANUMERIC
     .remove(b'*')
     .remove(b'-')

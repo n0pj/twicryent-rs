@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct User {
     pub id: u64,
     pub id_str: String,
@@ -52,18 +52,18 @@ pub struct User {
     // pub withheld_in_countries: Option<Vec<String>>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct UserEntities {
     pub url: Option<UserEntity>,
     pub description: Option<UserEntity>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct UserEntity {
     pub urls: Vec<Url>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Url {
     pub url: String,
     pub expanded_url: String,
@@ -71,7 +71,7 @@ pub struct Url {
     pub indices: Vec<u64>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Status {
     pub created_at: String,
     pub id: u64,
@@ -98,7 +98,7 @@ pub struct Status {
     pub lang: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct StatusEntities {
     pub hashtags: Vec<Hashtag>,
     pub symbols: Vec<Symbol>,
@@ -106,19 +106,19 @@ pub struct StatusEntities {
     pub urls: Vec<Url>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Hashtag {
     pub text: String,
     pub indices: Vec<u64>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Symbol {
     pub text: String,
     pub indices: Vec<u64>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct UserMention {
     pub screen_name: String,
     pub name: String,
