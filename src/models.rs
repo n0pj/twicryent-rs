@@ -146,7 +146,7 @@ impl Twitter {
     pub async fn get_text(
         &self,
         endpoint: &str,
-        params: HashMap<&str, String>,
+        params: &HashMap<&str, String>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut headers = HeaderMap::new();
         let client = Client::new();

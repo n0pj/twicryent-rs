@@ -1,3 +1,4 @@
+use crate::api::v1::user::User;
 use serde::Deserialize;
 
 // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline
@@ -22,7 +23,7 @@ pub struct UserTimeline {
     // pub in_reply_to_user_id: Option<u64>,
     // pub in_reply_to_user_id_str: Option<String>,
     // pub in_reply_to_screen_name: Option<String>,
-    // pub user: User,
+    pub user: User,
     // pub geo: Option<String>,
     // pub coordinates: Option<String>,
     // pub place: Option<String>,
@@ -31,7 +32,7 @@ pub struct UserTimeline {
     // pub retweet_count: u64,
     // pub favorite_count: u64,
     // pub favorited: bool,
-    pub retweeted: bool,
+    // pub retweeted: bool,
     // pub possibly_sensitive: Option<bool>,
     // pub lang: String,
 }
@@ -95,7 +96,7 @@ pub struct Media {
 #[derive(Debug, Deserialize, Clone)]
 pub struct VideoInfo {
     pub aspect_ratio: Vec<u64>,
-    pub duration_millis: u64,
+    pub duration_millis: Option<u64>,
     pub variants: Vec<Variant>,
 }
 
