@@ -107,6 +107,18 @@ pub struct Variant {
     pub url: String,
 }
 
+pub enum VariantKind {
+    VideoMp4,
+}
+
+impl VariantKind {
+    pub fn to_string(&self) -> String {
+        match self {
+            VariantKind::VideoMp4 => "video/mp4".to_string(),
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Clone)]
 pub struct Sizes {
     pub thumb: Size,
