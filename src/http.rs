@@ -20,7 +20,7 @@ pub enum Method {
 
 pub async fn request<T: DeserializeOwned + std::fmt::Debug>(
     endpoint: &str,
-    params: &HashMap<&str, &str>,
+    params: &HashMap<&str, String>,
     api_version: ApiVersion,
     method: Method,
 ) -> Result<T, Box<dyn std::error::Error>> {
@@ -85,7 +85,7 @@ pub async fn request<T: DeserializeOwned + std::fmt::Debug>(
 
 pub async fn request_text(
     endpoint: &str,
-    params: HashMap<&str, &str>,
+    params: HashMap<&str, String>,
     api_version: ApiVersion,
     method: Method,
 ) -> Result<String, Box<dyn std::error::Error>> {

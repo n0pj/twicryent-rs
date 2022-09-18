@@ -31,7 +31,7 @@ pub struct UserTimeline {
     // pub retweet_count: u64,
     // pub favorite_count: u64,
     // pub favorited: bool,
-    // pub retweeted: bool,
+    pub retweeted: bool,
     // pub possibly_sensitive: Option<bool>,
     // pub lang: String,
 }

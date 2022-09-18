@@ -146,7 +146,7 @@ impl Twitter {
     pub async fn get_text(
         &self,
         endpoint: &str,
-        params: HashMap<&str, &str>,
+        params: HashMap<&str, String>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut headers = HeaderMap::new();
         let client = Client::new();
@@ -177,7 +177,7 @@ impl Twitter {
     pub async fn get<T: DeserializeOwned>(
         &self,
         endpoint: &str,
-        params: HashMap<&str, &str>,
+        params: &HashMap<&str, String>,
     ) -> Result<T, Box<dyn std::error::Error>> {
         let mut headers = HeaderMap::new();
         let client = Client::new();
@@ -208,7 +208,7 @@ impl Twitter {
     pub async fn post(
         &self,
         endpoint: &str,
-        params: HashMap<&str, &str>,
+        params: HashMap<&str, String>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut headers = HeaderMap::new();
         let client = Client::new();
@@ -236,7 +236,7 @@ impl Twitter {
         Ok(res)
     }
 
-    fn create_query(&self, params: &HashMap<&str, &str>) -> String {
+    fn create_query(&self, params: &HashMap<&str, String>) -> String {
         let mut query = String::new();
 
         for (k, v) in params {
@@ -261,7 +261,7 @@ impl Twitter {
         &self,
         endpoint: &str,
         method: &Method,
-        params: &HashMap<&str, &str>,
+        params: &HashMap<&str, String>,
     ) -> HashMap<&str, String> {
         // create parameter string
         let mut oauth_params = HashMap::new();
@@ -339,7 +339,7 @@ impl Twitter {
         &self,
         method: &Method,
         endpoint: &str,
-        params: &HashMap<&str, &str>,
+        params: &HashMap<&str, String>,
     ) -> String {
         let oauth_params = self.create_oauth_params(endpoint, method, params);
         let oauth_params = oauth_params
